@@ -1,38 +1,119 @@
 package main
 
+import "fmt"
 
+type celsius struct {
+	suhu float64
+}
+
+type fahrenheit struct {
+	suhu float64
+}
+
+type kelvin struct {
+	suhu float64
+}
+
+// Celsius Function
+func (c celsius) toCelsius() float64 {
+	return c.suhu
+}
+
+func (c celsius) toFahrenheit() float64 {
+	return ((9.0 / 5.0) * c.suhu) + 32
+}
+
+func (c celsius) toKelvin() float64 {
+	return c.suhu + 273.15
+}
+
+// Fahrenheit Function
+func (f fahrenheit) toFahrenheit() float64 {
+	return f.suhu
+}
+
+func (f fahrenheit) toCelsius() float64 {
+	return (f.suhu - 32) * (5.0 / 9.0)
+}
+
+func (f fahrenheit) toKelvin() float64 {
+	return (f.suhu + 459.67) * (5.0 / 9.0)
+}
+
+// Kelvin Function
+func (k kelvin) toKelvin() float64 {
+	return k.suhu
+}
+
+func (k kelvin) toCelsius() float64 {
+	return k.suhu - 273.15
+}
+
+func (k kelvin) toFahrenheit() float64 {
+	return (k.suhu * (9.0 / 5.0)) - 459.67
+}
+
+type hitungSuhu interface {
+	toCelsius() float64
+	toFahrenheit() float64
+	toKelvin() float64
+}
 
 func main() {
+	fmt.Println("Masukkan suhu awal")
+	fmt.Println("1. Celsius")
+	fmt.Println("2. Fahrenheit")
+	fmt.Println("3. Kelvin")
+	fmt.Println("Masukkan suhu awal yang diinginkan:")
 
-}
+	// Input pilihan Suhu awal
+	var suhuAwal int
+	fmt.Scanf("%d\n", &suhuAwal)
 
+	for suhuAwal < 1 || suhuAwal > 3 {
+		fmt.Println("Suhu awal tidak valid, masukkan suhu awal yang diinginkan:")
+		fmt.Scanf("%d\n", &suhuAwal)
+	}
 
-func CelciusToFahrenheit(suhuCelsius float64) float64 {
-	suhuFahrenheit := ((9.0 / 5.0) * suhuCelsius) + 32
-	return suhuFahrenheit
-}
+	fmt.Println("Masukkan suhu akhir")
+	fmt.Println("1. Celsius")
+	fmt.Println("2. Fahrenheit")
+	fmt.Println("3. Kelvin")
+	fmt.Println("Masukkan suhu akhir yang diinginkan:")
 
-func CelciusToKelvin(suhuCelsius float64) float64 {
-	suhuKelvin := suhuCelsius + 273.15
-	return suhuKelvin
-}
+	// Input pilihan Suhu akhir
+	var suhuAkhir int
+	fmt.Scanf("%d", &suhuAkhir)
 
-func FahrenheitToCelcius(suhuFahrenheit float64) float64 {
-	suhuCelsius := (suhuFahrenheit - 32) * (5.0 / 9.0)
-	return suhuCelsius
-}
+	for suhuAkhir < 1 || suhuAkhir > 3 {
+		fmt.Println("Suhu akhir tidak valid, masukkan suhu akhir yang diinginkan:")
+		fmt.Scanf("%d", &suhuAkhir)
+	}
 
-func FahrenheitToKelvin(suhuFahrenheit float64) float64 {
-	suhuKelvin := (suhuFahrenheit + 459.67) * (5.0 / 9.0)
-	return suhuKelvin
-}
+	// Input masukkan suhu
+	var suhu float64
+	fmt.Println("Masukkan suhu:")
+	fmt.Scanf("%f\n", &suhu)
 
-func KelvinToCelsius(suhuKelvin float64) float64 {
-	suhuCelsius := suhuKelvin - 273.15
-	return suhuCelsius
-}
+	var interfaceSuhu hitungSuhu
+	switch suhuAwal {
+	case 1: 
+		interfaceSuhu = celsius{suhu}
+	case 2:
+		interfaceSuhu = fahrenheit{suhu}
+	case 3:
+		interfaceSuhu = kelvin{suhu}
+	}
 
-func KelvinToFahrenheit(suhuKelvin float64) float64 {
-	suhuFahrenheit := (suhuKelvin * (9.0 / 5.0)) - 459.67
-	return suhuFahrenheit
+	var suhuFinal float64
+	switch suhuAkhir {
+	case 1:
+		suhuFinal = interfaceSuhu.toCelsius()
+	case 2:
+		suhuFinal = interfaceSuhu.toFahrenheit()
+	case 3:
+		suhuFinal = interfaceSuhu.toKelvin()
+	}
+
+	fmt.Printf("Suhu akhir yang didapat adalah: %.2f", suhuFinal)
 }
